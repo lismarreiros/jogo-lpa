@@ -8,13 +8,12 @@ clock = pygame.time.Clock()  # cria um relogio para controlar o fps
 test_font = pygame.font.Font('fonts/Pixeltype.ttf', 50) 
 # cenário
 imagem_mapa = pygame.image.load("./imagens/mapa.png")
-menuzinho = pygame.Surface((200,100))
+menuzinho = pygame.Surface((600,40))
 menuzinho.fill((3, 22, 28))
 
 # origin point (0,0) is top-left
 tela = pygame.display.set_mode(size=(700, 500))  # cria uma tela com largura, altura
 imagem_mapa = pygame.transform.scale(imagem_mapa, (700, 500))  # redimensiona a imagem
-text_surface = test_font.render("Tanatos", True, (43, 100, 113)) 
 
 # reaper - player
 imagem_reaper_parado = pygame.image.load("./imagens/reaper/HostileIdleReaper-Sheet.png").convert_alpha() 
@@ -33,6 +32,12 @@ frame_size_ghost = (32, 32)
 ghost1 = ghost.Ghost(imagem_ghost, frame_size_ghost, imagem_ghost_machucado, imagem_ghost_morto, posicao_inicial_ghost)
 
 som_espada = pygame.mixer.Sound("./sons/espada.mp3")  # carrega um som, pode ser wav, ogg, mp3 etc.
+som_hit = pygame.mixer.Sound("./sons/tackleHit.wav")
+
+# placar
+score_reaper = 0
+score_ghost = 0
+mensagem_fim_jogo = ""
 
 # loop principal do jogo
 while True:
@@ -98,17 +103,32 @@ while True:
                 reaper1.levar_dano(ghost1.forca)
                 reaper1.invulneravel = True
                 reaper1.tempo_desde_dano = pygame.time.get_ticks()
+                som_hit.play()
                 print(f"💥 Ghost atacou o Reaper! Vida do Reaper: {reaper1.vida}")
 
-    if reaper1.vivo == False:
-        print("Reaper morreu! Fim de jogo.")
-    
+    # --- Fim de jogo / placar ---
+    if not reaper1.vivo and mensagem_fim_jogo == "":
+        score_ghost += 1
+        mensagem_fim_jogo = "Ghost venceu!"
+        print(mensagem_fim_jogo)
+    elif not ghost1.vivo and mensagem_fim_jogo == "":
+        score_reaper += 1
+        mensagem_fim_jogo = "Reaper venceu!"
+        print(mensagem_fim_jogo)
+
     # desenha elementos na tela e atualiza ela
     tela.blit(imagem_mapa, (0, 0))
-    tela.blit(menuzinho, (10, 10))
-    tela.blit(text_surface, (20, 20))
+    tela.blit(menuzinho, (50, 10))
    
     reaper1.desenhar(tela)
     ghost1.desenhar(tela)
+
+    # --- HUD / Interface ---
+    score_text = test_font.render(f"Reaper: {score_reaper}  |  Ghost: {score_ghost}", True, (200, 200, 200))
+    tela.blit(score_text, (200, 20))
+
+    if mensagem_fim_jogo:
+        fim_text = test_font.render(mensagem_fim_jogo, True, (3, 22, 28))
+        tela.blit(fim_text, (220, 80))
 
     pygame.display.flip()  # atualiza/exibe o conteudo da tela

@@ -96,7 +96,7 @@ class Ghost:
   def desenhar(self, tela, scale=1.5):
     frame = self.get_frame()
     if scale != 1:
-        frame = pygame.transform.scale(frame, (int(self.frame_size[0] * scale), int(self.frame_size[1] * scale)))
+      frame = pygame.transform.scale(frame, (int(self.frame_size[0] * scale), int(self.frame_size[1] * scale)))
     # desenhar na posição (x, y) atual
     tela.blit(frame, (int(self.x), int(self.y)))
     # (rect já atualizado em atualizar)
