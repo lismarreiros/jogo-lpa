@@ -16,12 +16,13 @@ tela = pygame.display.set_mode(size=(700, 500))  # cria uma tela com largura, al
 imagem_mapa = pygame.transform.scale(imagem_mapa, (700, 500))  # redimensiona a imagem
 text_surface = test_font.render("Tanatos", True, (43, 100, 113)) 
 
-
 # reaper - player
-imagem_reaper = pygame.image.load("./imagens/reaper/HostileIdleReaper-Sheet.png").convert_alpha() 
+imagem_reaper_parado = pygame.image.load("./imagens/reaper/HostileIdleReaper-Sheet.png").convert_alpha() 
+imagem_reaper_movendo = pygame.image.load("./imagens/reaper/HostileRunningReaper-Sheet.png").convert_alpha() 
+imagem_reaper_atacando = pygame.image.load("./imagens/reaper/HostileAttackReaper-Sheet.png").convert_alpha()
 posicao_inicial_reaper = (100, 325)
 frame_size_reaper = (48, 48)
-reaper1 = reaper.Reaper(imagem_reaper, frame_size_reaper, posicao_inicial_reaper)
+reaper1 = reaper.Reaper(imagem_reaper_parado, imagem_reaper_movendo, imagem_reaper_atacando, frame_size_reaper, posicao_inicial_reaper)
 
 # ghost - enemy
 imagem_ghost = pygame.image.load("./imagens/ghost/ghost-idle.png").convert_alpha()
@@ -47,7 +48,7 @@ while True:
     # desenha elementos na tela e atualiza ela
     tela.blit(imagem_mapa, (0, 0))
     tela.blit(menuzinho, (10, 10))
-    tela.blit(text_surface, (10, 10))
+    tela.blit(text_surface, (20, 20))
     reaper1.atualizar(delta_time)
     reaper1.desenhar(tela)
     ghost1.atualizar(delta_time)
